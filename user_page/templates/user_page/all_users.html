@@ -1,0 +1,37 @@
+{% if user.is_superuser %}
+<div style="margin-top: 30px; padding: 20px; border: 2px solid #007bff; border-radius: 8px; background: #f8f9fa;">
+    <h3>Все пользователи системы</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #007bff; color: white;">
+                <th style="padding: 10px; border: 1px solid #ddd;">ID</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Username</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Email</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Телефон</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Пол</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Суперюзер</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in all_users %}
+            <tr style="{% cycle 'background: white;' 'background: #f2f2f2;' %}">
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ u.id }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ u.username }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ u.email|default:"-" }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    {% if u.userinfo %}{{ u.userinfo.phone|default:"-" }}{% else %}-{% endif %}
+                </td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    {% if u.userinfo %}
+                        {% if u.userinfo.gender == True %}Мужской
+                        {% elif u.userinfo.gender == False %}Женский
+                        {% else %}-{% endif %}
+                    {% else %}-{% endif %}
+                </td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ u.is_superuser|yesno:"Да,Нет" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}

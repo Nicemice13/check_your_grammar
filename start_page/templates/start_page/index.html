@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка грамматики</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="{% static 'start_page/styles.css' %}">
+</head>
+<body>
+    <div class="header">
+        <h1>Проверка грамматики</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'user_page' %}">Профиль</a>
+        {% else %}
+            <a href="{% url 'auth_page' %}">Войти</a>
+        {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="content-form">
+        <h2>Проверить текст</h2>
+        <form hx-post="{% url 'save_content' %}" hx-target="#history" hx-swap="afterbegin">
+            {% csrf_token %}
+            <textarea name="original_text" rows="6" placeholder="Введите текст для проверки (до 2000 символов)" maxlength="2000" required></textarea>
+            <select name="language" required>
+                <option value="">Выберите язык</option>
+                <option value="ru">Русский</option>
+                <option value="en">Английский</option>
+                <option value="zh">Китайский</option>
+                <option value="es">Испанский</option>
+            </select>
+            <textarea name="corrected_text" rows="6" placeholder="Исправленный текст" required></textarea>
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+
+    <div class="history">
+        <h2>История проверок</h2>
+        <div id="history">
+            {% for content in contents %}
+            <div class="content-item">
+                <div class="content-meta">
+                    <strong>{{ content.get_language_display }}</strong> | {{ content.created_at|date:"d.m.Y H:i" }}
+                </div>
+                <div class="content-text">{{ content.corrected_text }}</div>
+            </div>
+            {% empty %}
+            <p>История пуста</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="content-form">
+        <h2>Добро пожаловать!</h2>
+        <p>Войдите, чтобы начать проверку текстов.</p>
+    </div>
+    {% endif %}
+</body>
+</html>

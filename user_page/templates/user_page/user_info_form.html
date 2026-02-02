@@ -1,0 +1,37 @@
+<form hx-post="{% url 'save_user_info' %}" 
+      hx-target="#user-details" 
+      hx-swap="innerHTML"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+        <label><strong>Телефон:</strong></label>
+        <input type="text" name="phone" value="{{ user.userinfo.phone|default:'' }}" maxlength="12" style="width: 100%; padding: 5px;">
+    </p>
+    <p>
+        <label><strong>Дата рождения:</strong></label>
+        <input type="date" name="birthday" value="{{ user.userinfo.birthday|date:'Y-m-d'|default:'' }}" style="width: 100%; padding: 5px;">
+    </p>
+    <p>
+        <label><strong>Пол:</strong></label>
+        <select name="gender" style="width: 100%; padding: 5px;">
+            <option value="">Не указан</option>
+            <option value="True" {% if user.userinfo.gender %}selected{% endif %}>Мужской</option>
+            <option value="False" {% if user.userinfo.gender == False and user.userinfo.gender != None %}selected{% endif %}>Женский</option>
+        </select>
+    </p>
+    <p>
+        <label><strong>Фото:</strong></label>
+        <input type="file" name="photo" accept="image/*" style="width: 100%; padding: 5px;">
+        {% if user.userinfo.photo %}
+            <br><small>Текущее фото: {{ user.userinfo.photo.name }}</small>
+        {% endif %}
+    </p>
+    <button type="submit" style="margin-right: 10px; margin-top: 10px;">Сохранить</button>
+    <button type="button" 
+            hx-get="{% url 'refresh_user_info' %}" 
+            hx-target="#user-details" 
+            hx-swap="innerHTML"
+            style="background: #6c757d; margin-top: 10px;">
+        Отмена
+    </button>
+</form>

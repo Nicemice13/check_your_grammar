@@ -1,0 +1,36 @@
+{% if user.userinfo %}
+    <h3>Дополнительная информация</h3>
+    
+    <p><strong>Телефон:</strong> {{ user.userinfo.phone|default:"Не указан" }}</p>
+    <p><strong>Дата рождения:</strong> {{ user.userinfo.birthday|default:"Не указана" }}</p>
+    <p><strong>Пол:</strong> 
+        {% if user.userinfo.gender == True %}Мужской
+        {% elif user.userinfo.gender == False %}Женский
+        {% else %}Не указан
+        {% endif %}
+    </p>
+    
+    {% if user.userinfo.photo %}
+        <p><strong>Фото:</strong></p>
+        <img src="{{ user.userinfo.photo.url }}" alt="Фото профиля" style="max-width: 200px; border-radius: 8px;">
+    {% endif %}
+    
+    <p style="margin-top: 20px;">
+        <button hx-get="{% url 'edit_user_info' %}" 
+                hx-target="#user-details" 
+                hx-swap="innerHTML"
+                style="background: #28a745;">
+            Редактировать
+        </button>
+    </p>
+{% else %}
+    <h3>Добавить дополнительную информацию</h3>
+    <p>
+        <button hx-get="{% url 'edit_user_info' %}" 
+                hx-target="#user-details" 
+                hx-swap="innerHTML"
+                style="background: #28a745;">
+            Добавить информацию
+        </button>
+    </p>
+{% endif %}
