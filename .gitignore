@@ -1,0 +1,23 @@
+venv/
+BD_structure.md
+draft_page.txt
+
+agents.md
+
+structure_BD.md
+__pycache__/
+
+*.pyc
+
+env/
+
+db.sqlite3
+
+*.log
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
