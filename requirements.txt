@@ -30,7 +30,7 @@ nicegui==3.6.1
 orjson==3.11.6
 pillow==12.1.0
 propcache==0.4.1
-pydantic==1.10.26
+pydantic>=2.0,<3.0
 pydantic_core==2.41.5
 Pygments==2.19.2
 python-dotenv==1.2.1
