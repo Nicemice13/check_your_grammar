@@ -49,3 +49,6 @@ wsproto==1.3.2
 yarl==1.22.0
 psycopg2-binary==2.9.10
 dj-database-url==2.3.0
+langchain-core==0.3.29
+langchain-community==0.3.14
+gigachat==0.1.38
