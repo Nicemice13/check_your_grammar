@@ -24,20 +24,45 @@
         <form hx-post="{% url 'save_content' %}" hx-target="#history" hx-swap="afterbegin">
             {% csrf_token %}
             <textarea name="original_text" rows="6" placeholder="Введите текст для проверки (до 2000 символов)" maxlength="2000" required></textarea>
-            <select name="language" required>
-                <option value="">Выберите язык</option>
-                <option value="ru">Русский</option>
+            <select name="language">
+                <option value="ru" selected>Русский (по умолчанию)</option>
                 <option value="en">Английский</option>
                 <option value="zh">Китайский</option>
                 <option value="es">Испанский</option>
             </select>
-            <textarea name="corrected_text" rows="6" placeholder="Исправленный текст" required></textarea>
-            <button type="submit">Сохранить</button>
+            <textarea id="corrected_text" name="corrected_text" rows="6" placeholder="Исправленный текст" required></textarea>
+            <div>
+                <button type="button" 
+                        hx-post="{% url 'check_text' %}" 
+                        hx-target="#corrected_text" 
+                        hx-swap="innerHTML"
+                        hx-include="[name='original_text'],[name='language']"
+                        style="background: #007bff; margin-right: 10px;">
+                    Проверить
+                </button>
+                <button type="button" 
+                        hx-post="{% url 'rephrase_text' %}" 
+                        hx-target="#corrected_text" 
+                        hx-swap="innerHTML"
+                        hx-include="[name='original_text'],[name='language']"
+                        style="background: #17a2b8; margin-right: 10px;">
+                    Перефразировать
+                </button>
+                <button type="submit">Сохранить</button>
+            </div>
         </form>
     </div>
 
     <div class="history">
         <h2>История проверок</h2>
+        <input type="text" 
+               name="search" 
+               placeholder="Поиск по ключевым словам..." 
+               hx-get="{% url 'search_history' %}" 
+               hx-trigger="keyup changed delay:500ms" 
+               hx-target="#history" 
+               hx-swap="innerHTML"
+               style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
         <div id="history">
             {% for content in contents %}
             <div class="content-item">

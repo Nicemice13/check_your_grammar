@@ -1,0 +1,10 @@
+{% for content in contents %}
+<div class="content-item">
+    <div class="content-meta">
+        <strong>{{ content.get_language_display }}</strong> | {{ content.created_at|date:"d.m.Y H:i" }}
+    </div>
+    <div class="content-text">{{ content.corrected_text }}</div>
+</div>
+{% empty %}
+<p>Ничего не найдено</p>
+{% endfor %}

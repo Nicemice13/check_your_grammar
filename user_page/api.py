@@ -1,5 +1,6 @@
 from ninja import NinjaAPI, Schema
 from django.contrib.auth.models import User
+from django.db import connection
 from .models import UserInfo
 from typing import Optional
 
@@ -59,3 +60,29 @@ def get_user(request, user_id: int):
     except UserInfo.DoesNotExist:
         user_data["userinfo"] = None
     return user_data
+
+@api.get("/search_word")
+def search_word(request, word: str):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM search_word(%s)", [word])
+        rows = cursor.fetchall()
+        results = [
+            {
+                "id": row[0],
+                "user_id": row[1],
+                "username": row[2],
+                "language": row[3],
+                "corrected_text": row[4],
+                "created_at": row[5].isoformat() if row[5] else None
+            }
+            for row in rows
+        ]
+    return {"results": results}
+
+@api.get("/search_container")
+def search_container(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM searh_container")
+        rows = cursor.fetchall()
+        results = [{"corrected_text": row[0]} for row in rows]
+    return {"results": results}
